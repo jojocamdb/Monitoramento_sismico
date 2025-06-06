@@ -12,7 +12,7 @@ const StatsCards = ({ sensors, alerts }: StatsCardsProps) => {
   const activeSensors = sensors.filter(s => s.status === 'ACTIVE').length;
   const alertSensors = sensors.filter(s => s.status === 'ALERT').length;
   const unacknowledgedAlerts = alerts.filter(a => !a.acknowledged).length;
-  const criticalAlerts = alerts.filter(a => a.severity === 'CRITICAL' || a.severity === 'DANGER').length;
+  const significantEarthquakes = alerts.filter(a => a.magnitude >= 3.0).length;
 
   const cards = [
     {
@@ -24,7 +24,7 @@ const StatsCards = ({ sensors, alerts }: StatsCardsProps) => {
       bgColor: 'bg-safe-500/10'
     },
     {
-      title: 'Sensores em Alerta',
+      title: 'Alertas Sísmicos',
       value: alertSensors,
       total: sensors.length,
       icon: AlertTriangle,
@@ -40,8 +40,8 @@ const StatsCards = ({ sensors, alerts }: StatsCardsProps) => {
       bgColor: 'bg-volcanic-500/10'
     },
     {
-      title: 'Alertas Críticos',
-      value: criticalAlerts,
+      title: 'Terremotos Significativos',
+      value: significantEarthquakes,
       total: alerts.length,
       icon: Shield,
       color: 'text-red-500',

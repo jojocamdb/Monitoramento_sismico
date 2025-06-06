@@ -1,41 +1,89 @@
 
-import { SensorData, AlertData, VolcanicEvent } from '../types/monitoring';
+import { SensorData, AlertData, EarthquakeEvent } from '../types/monitoring';
 
-// Dados simulados de sensores sísmicos
+// Dados simulados de sensores sísmicos globais
 export const mockSensorData: SensorData[] = [
   {
     id: '1',
-    deviceId: 'ESP32-001',
+    deviceId: 'ESP32-JPN-001',
     timestamp: new Date(),
-    location: { latitude: -22.9068, longitude: -43.1729 }, // Rio de Janeiro
-    seismic: { x: 0.02, y: 0.01, z: 0.98, magnitude: 0.98 },
-    riskLevel: 'LOW',
-    status: 'ACTIVE'
-  },
-  {
-    id: '2',
-    deviceId: 'ESP32-002',
-    timestamp: new Date(Date.now() - 30000),
-    location: { latitude: -23.5505, longitude: -46.6333 }, // São Paulo
-    seismic: { x: 0.15, y: 0.08, z: 1.02, magnitude: 1.04 },
+    location: { 
+      latitude: 35.6762, 
+      longitude: 139.6503, 
+      country: 'Japão', 
+      region: 'Tóquio' 
+    },
+    seismic: { x: 0.02, y: 0.01, z: 0.98, magnitude: 2.1, depth: 15 },
     riskLevel: 'MEDIUM',
     status: 'ALERT'
   },
   {
-    id: '3',
-    deviceId: 'ESP32-003',
-    timestamp: new Date(Date.now() - 60000),
-    location: { latitude: -19.9191, longitude: -43.9378 }, // Belo Horizonte
-    seismic: { x: 0.45, y: 0.32, z: 1.15, magnitude: 1.25 },
+    id: '2',
+    deviceId: 'ESP32-USA-002',
+    timestamp: new Date(Date.now() - 30000),
+    location: { 
+      latitude: 37.7749, 
+      longitude: -122.4194, 
+      country: 'EUA', 
+      region: 'São Francisco' 
+    },
+    seismic: { x: 0.45, y: 0.32, z: 1.15, magnitude: 3.2, depth: 8 },
     riskLevel: 'HIGH',
     status: 'ALERT'
   },
   {
+    id: '3',
+    deviceId: 'ESP32-CHL-003',
+    timestamp: new Date(Date.now() - 60000),
+    location: { 
+      latitude: -33.4489, 
+      longitude: -70.6693, 
+      country: 'Chile', 
+      region: 'Santiago' 
+    },
+    seismic: { x: 0.78, y: 0.65, z: 1.45, magnitude: 4.1, depth: 25 },
+    riskLevel: 'CRITICAL',
+    status: 'ALERT'
+  },
+  {
     id: '4',
-    deviceId: 'ESP32-004',
+    deviceId: 'ESP32-TUR-004',
     timestamp: new Date(Date.now() - 120000),
-    location: { latitude: -30.0346, longitude: -51.2177 }, // Porto Alegre
-    seismic: { x: 0.01, y: 0.02, z: 0.97, magnitude: 0.97 },
+    location: { 
+      latitude: 41.0082, 
+      longitude: 28.9784, 
+      country: 'Turquia', 
+      region: 'Istambul' 
+    },
+    seismic: { x: 0.15, y: 0.08, z: 1.02, magnitude: 1.8, depth: 12 },
+    riskLevel: 'LOW',
+    status: 'ACTIVE'
+  },
+  {
+    id: '5',
+    deviceId: 'ESP32-ITA-005',
+    timestamp: new Date(Date.now() - 180000),
+    location: { 
+      latitude: 40.8518, 
+      longitude: 14.2681, 
+      country: 'Itália', 
+      region: 'Nápoles' 
+    },
+    seismic: { x: 0.25, y: 0.18, z: 1.08, magnitude: 2.5, depth: 18 },
+    riskLevel: 'MEDIUM',
+    status: 'ALERT'
+  },
+  {
+    id: '6',
+    deviceId: 'ESP32-IDN-006',
+    timestamp: new Date(Date.now() - 240000),
+    location: { 
+      latitude: -6.2088, 
+      longitude: 106.8456, 
+      country: 'Indonésia', 
+      region: 'Jacarta' 
+    },
+    seismic: { x: 0.12, y: 0.09, z: 0.99, magnitude: 1.9, depth: 22 },
     riskLevel: 'LOW',
     status: 'ACTIVE'
   }
@@ -44,69 +92,133 @@ export const mockSensorData: SensorData[] = [
 export const mockAlerts: AlertData[] = [
   {
     id: 'alert-1',
-    sensorId: '2',
-    type: 'SEISMIC_ACTIVITY',
-    severity: 'WARNING',
-    message: 'Atividade sísmica moderada detectada - Magnitude 1.04',
-    timestamp: new Date(Date.now() - 30000),
+    sensorId: '3',
+    type: 'EARTHQUAKE',
+    severity: 'CRITICAL',
+    message: 'Terremoto de magnitude 4.1 detectado - Possível tremor principal',
+    timestamp: new Date(Date.now() - 60000),
     acknowledged: false,
-    location: { latitude: -23.5505, longitude: -46.6333 }
+    location: { 
+      latitude: -33.4489, 
+      longitude: -70.6693, 
+      country: 'Chile', 
+      region: 'Santiago' 
+    },
+    magnitude: 4.1,
+    depth: 25
   },
   {
     id: 'alert-2',
-    sensorId: '3',
-    type: 'SEISMIC_ACTIVITY',
+    sensorId: '2',
+    type: 'EARTHQUAKE',
     severity: 'DANGER',
-    message: 'Atividade sísmica elevada - Magnitude 1.25 - Possível precursor vulcânico',
-    timestamp: new Date(Date.now() - 60000),
+    message: 'Atividade sísmica significativa - Magnitude 3.2',
+    timestamp: new Date(Date.now() - 30000),
     acknowledged: false,
-    location: { latitude: -19.9191, longitude: -43.9378 }
+    location: { 
+      latitude: 37.7749, 
+      longitude: -122.4194, 
+      country: 'EUA', 
+      region: 'São Francisco' 
+    },
+    magnitude: 3.2,
+    depth: 8
   },
   {
     id: 'alert-3',
+    sensorId: '5',
+    type: 'TREMOR',
+    severity: 'WARNING',
+    message: 'Tremor moderado detectado - Magnitude 2.5',
+    timestamp: new Date(Date.now() - 180000),
+    acknowledged: false,
+    location: { 
+      latitude: 40.8518, 
+      longitude: 14.2681, 
+      country: 'Itália', 
+      region: 'Nápoles' 
+    },
+    magnitude: 2.5,
+    depth: 18
+  },
+  {
+    id: 'alert-4',
     sensorId: '1',
-    type: 'SYSTEM_ERROR',
+    type: 'AFTERSHOCK',
     severity: 'INFO',
-    message: 'Calibração de sensor concluída com sucesso',
+    message: 'Réplica detectada - Magnitude 2.1',
     timestamp: new Date(Date.now() - 300000),
     acknowledged: true,
-    location: { latitude: -22.9068, longitude: -43.1729 }
+    location: { 
+      latitude: 35.6762, 
+      longitude: 139.6503, 
+      country: 'Japão', 
+      region: 'Tóquio' 
+    },
+    magnitude: 2.1,
+    depth: 15
   }
 ];
 
-export const mockVolcanicEvents: VolcanicEvent[] = [
+export const mockEarthquakeEvents: EarthquakeEvent[] = [
   {
-    id: 'volcano-1',
-    name: 'Região Sudeste',
-    location: { latitude: -22.9068, longitude: -43.1729 },
+    id: 'eq-1',
+    name: 'Anel de Fogo do Pacífico - Japão',
+    location: { 
+      latitude: 35.6762, 
+      longitude: 139.6503, 
+      country: 'Japão', 
+      region: 'Tóquio' 
+    },
     lastActivity: new Date(Date.now() - 3600000),
-    riskLevel: 'LOW',
-    activeSensors: 4,
-    recentAlerts: 1
-  },
-  {
-    id: 'volcano-2',
-    name: 'Grande São Paulo',
-    location: { latitude: -23.5505, longitude: -46.6333 },
-    lastActivity: new Date(Date.now() - 30000),
+    magnitude: 2.1,
+    depth: 15,
     riskLevel: 'MEDIUM',
-    activeSensors: 6,
-    recentAlerts: 3
+    activeSensors: 8,
+    recentAlerts: 3,
+    affectedPopulation: 13960000
   },
   {
-    id: 'volcano-3',
-    name: 'Região Centro-Oeste',
-    location: { latitude: -19.9191, longitude: -43.9378 },
-    lastActivity: new Date(Date.now() - 60000),
+    id: 'eq-2',
+    name: 'Falha de San Andreas - Califórnia',
+    location: { 
+      latitude: 37.7749, 
+      longitude: -122.4194, 
+      country: 'EUA', 
+      region: 'São Francisco' 
+    },
+    lastActivity: new Date(Date.now() - 30000),
+    magnitude: 3.2,
+    depth: 8,
     riskLevel: 'HIGH',
-    activeSensors: 2,
-    recentAlerts: 5
+    activeSensors: 12,
+    recentAlerts: 5,
+    affectedPopulation: 884000
+  },
+  {
+    id: 'eq-3',
+    name: 'Cordilheira dos Andes - Chile',
+    location: { 
+      latitude: -33.4489, 
+      longitude: -70.6693, 
+      country: 'Chile', 
+      region: 'Santiago' 
+    },
+    lastActivity: new Date(Date.now() - 60000),
+    magnitude: 4.1,
+    depth: 25,
+    riskLevel: 'CRITICAL',
+    activeSensors: 6,
+    recentAlerts: 8,
+    affectedPopulation: 6160000
   }
 ];
 
 // Função para gerar dados sísmicos em tempo real
 export const generateSeismicData = (baseData: SensorData): SensorData => {
-  const variation = 0.1;
+  const variation = 0.2;
+  const newMagnitude = Math.max(0.5, baseData.seismic.magnitude + (Math.random() - 0.5) * variation);
+  
   return {
     ...baseData,
     timestamp: new Date(),
@@ -114,11 +226,8 @@ export const generateSeismicData = (baseData: SensorData): SensorData => {
       x: baseData.seismic.x + (Math.random() - 0.5) * variation,
       y: baseData.seismic.y + (Math.random() - 0.5) * variation,
       z: baseData.seismic.z + (Math.random() - 0.5) * variation,
-      magnitude: Math.sqrt(
-        Math.pow(baseData.seismic.x + (Math.random() - 0.5) * variation, 2) +
-        Math.pow(baseData.seismic.y + (Math.random() - 0.5) * variation, 2) +
-        Math.pow(baseData.seismic.z + (Math.random() - 0.5) * variation, 2)
-      )
+      magnitude: newMagnitude,
+      depth: Math.max(1, baseData.seismic.depth + (Math.random() - 0.5) * 5)
     }
   };
 };

@@ -13,14 +13,14 @@ const Header = ({ unreadAlerts }: HeaderProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 volcanic-gradient rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 seismic-gradient rounded-lg flex items-center justify-center">
               <Activity className="w-5 h-5 text-white" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-slate-50">
-                Sistema de Monitoramento Vulcânico
+                Sistema Global de Monitoramento Sísmico
               </h1>
-              <p className="text-sm text-slate-400">Global Solution 2025.1</p>
+              <p className="text-sm text-slate-400">Global Solution 2025.1 - Earthquake Monitoring</p>
             </div>
           </div>
         </div>

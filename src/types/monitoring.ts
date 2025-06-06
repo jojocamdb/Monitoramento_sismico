@@ -7,12 +7,15 @@ export interface SensorData {
     latitude: number;
     longitude: number;
     altitude?: number;
+    country: string;
+    region: string;
   };
   seismic: {
     x: number;
     y: number;
     z: number;
     magnitude: number;
+    depth: number; // profundidade em km
   };
   riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   status: 'ACTIVE' | 'INACTIVE' | 'ALERT';
@@ -21,7 +24,7 @@ export interface SensorData {
 export interface AlertData {
   id: string;
   sensorId: string;
-  type: 'SEISMIC_ACTIVITY' | 'GPS_ANOMALY' | 'SYSTEM_ERROR';
+  type: 'EARTHQUAKE' | 'TREMOR' | 'AFTERSHOCK' | 'SYSTEM_ERROR';
   severity: 'INFO' | 'WARNING' | 'DANGER' | 'CRITICAL';
   message: string;
   timestamp: Date;
@@ -29,18 +32,27 @@ export interface AlertData {
   location: {
     latitude: number;
     longitude: number;
+    country: string;
+    region: string;
   };
+  magnitude: number;
+  depth: number;
 }
 
-export interface VolcanicEvent {
+export interface EarthquakeEvent {
   id: string;
   name: string;
   location: {
     latitude: number;
     longitude: number;
+    country: string;
+    region: string;
   };
   lastActivity: Date;
+  magnitude: number;
+  depth: number;
   riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   activeSensors: number;
   recentAlerts: number;
+  affectedPopulation?: number;
 }

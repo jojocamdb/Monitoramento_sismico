@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { SensorData } from '@/types/monitoring';
-import { Activity, MapPin, Clock, Wifi } from 'lucide-react';
+import { Activity, MapPin, Clock, Wifi, Globe } from 'lucide-react';
 
 interface SensorDetailsProps {
   sensors: SensorData[];
@@ -21,8 +21,15 @@ const SensorDetails = ({ sensors }: SensorDetailsProps) => {
   };
 
   const getMagnitudeProgress = (magnitude: number) => {
-    // Normaliza a magnitude para uma escala de 0-100
-    return Math.min((magnitude / 2) * 100, 100);
+    // Normaliza a magnitude para uma escala de 0-100 (0-5 magnitude)
+    return Math.min((magnitude / 5) * 100, 100);
+  };
+
+  const getMagnitudeColor = (magnitude: number) => {
+    if (magnitude >= 4.0) return 'bg-red-500';
+    if (magnitude >= 3.0) return 'bg-volcanic-500';
+    if (magnitude >= 2.0) return 'bg-seismic-500';
+    return 'bg-safe-500';
   };
 
   return (
@@ -30,7 +37,7 @@ const SensorDetails = ({ sensors }: SensorDetailsProps) => {
       <CardHeader>
         <CardTitle className="text-slate-50 flex items-center space-x-2">
           <Activity className="w-5 h-5 text-blue-500" />
-          <span>Detalhes dos Sensores</span>
+          <span>Detalhes dos Sensores Globais</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -72,15 +79,19 @@ const SensorDetails = ({ sensors }: SensorDetailsProps) => {
                 {/* Informações de Localização */}
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2 text-sm text-slate-300">
-                    <MapPin className="w-4 h-4" />
+                    <Globe className="w-4 h-4" />
                     <span>Localização</span>
                   </div>
                   <div className="text-sm space-y-1">
                     <div className="text-slate-400">
-                      Lat: <span className="text-slate-50">{sensor.location.latitude.toFixed(6)}</span>
+                      <span className="text-slate-200 font-medium">{sensor.location.country}</span>
+                      <span className="text-slate-400 ml-2">({sensor.location.region})</span>
                     </div>
                     <div className="text-slate-400">
-                      Lng: <span className="text-slate-50">{sensor.location.longitude.toFixed(6)}</span>
+                      Lat: <span className="text-slate-50 font-mono">{sensor.location.latitude.toFixed(4)}</span>
+                    </div>
+                    <div className="text-slate-400">
+                      Lng: <span className="text-slate-50 font-mono">{sensor.location.longitude.toFixed(4)}</span>
                     </div>
                   </div>
                 </div>
@@ -94,12 +105,18 @@ const SensorDetails = ({ sensors }: SensorDetailsProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-slate-400">Magnitude</span>
-                      <span className="text-slate-50 font-mono">{sensor.seismic.magnitude.toFixed(3)}</span>
+                      <span className="text-slate-50 font-mono text-lg font-bold">
+                        {sensor.seismic.magnitude.toFixed(1)}
+                      </span>
                     </div>
                     <Progress 
                       value={getMagnitudeProgress(sensor.seismic.magnitude)}
-                      className="h-2"
+                      className="h-3"
                     />
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Profundidade</span>
+                      <span className="text-slate-50">{sensor.seismic.depth}km</span>
+                    </div>
                   </div>
                 </div>
               </div>

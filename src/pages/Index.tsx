@@ -21,23 +21,37 @@ const Index = () => {
         prevSensors.map(sensor => {
           const updatedSensor = generateSeismicData(sensor);
           
-          // Verifica se deve gerar um novo alerta
-          if (updatedSensor.seismic.magnitude > 1.1 && Math.random() < 0.1) {
+          // Verifica se deve gerar um novo alerta baseado na magnitude
+          if (updatedSensor.seismic.magnitude > 2.0 && Math.random() < 0.15) {
+            const alertType = updatedSensor.seismic.magnitude > 3.5 ? 'EARTHQUAKE' : 
+                             updatedSensor.seismic.magnitude > 2.5 ? 'TREMOR' : 'AFTERSHOCK';
+            
+            const severity = updatedSensor.seismic.magnitude > 4.0 ? 'CRITICAL' :
+                           updatedSensor.seismic.magnitude > 3.0 ? 'DANGER' : 'WARNING';
+
             const newAlert: AlertData = {
               id: `alert-${Date.now()}`,
               sensorId: updatedSensor.id,
-              type: 'SEISMIC_ACTIVITY',
-              severity: updatedSensor.seismic.magnitude > 1.2 ? 'DANGER' : 'WARNING',
-              message: `Atividade sísmica ${updatedSensor.seismic.magnitude > 1.2 ? 'elevada' : 'moderada'} detectada - Magnitude ${updatedSensor.seismic.magnitude.toFixed(3)}`,
+              type: alertType,
+              severity: severity,
+              message: `${alertType === 'EARTHQUAKE' ? 'Terremoto' : 
+                       alertType === 'TREMOR' ? 'Tremor' : 'Réplica'} detectado - Magnitude ${updatedSensor.seismic.magnitude.toFixed(1)}`,
               timestamp: new Date(),
               acknowledged: false,
-              location: updatedSensor.location
+              location: {
+                latitude: updatedSensor.location.latitude,
+                longitude: updatedSensor.location.longitude,
+                country: updatedSensor.location.country,
+                region: updatedSensor.location.region
+              },
+              magnitude: updatedSensor.seismic.magnitude,
+              depth: updatedSensor.seismic.depth
             };
             
             setAlerts(prev => [newAlert, ...prev]);
             
             toast.error(newAlert.message, {
-              description: `Sensor ${updatedSensor.deviceId} - ${updatedSensor.location.latitude.toFixed(3)}, ${updatedSensor.location.longitude.toFixed(3)}`,
+              description: `${updatedSensor.location.country} - ${updatedSensor.location.region} | Profundidade: ${updatedSensor.seismic.depth}km`,
               action: {
                 label: 'Ver Detalhes',
                 onClick: () => console.log('Navegando para detalhes do sensor')
@@ -46,13 +60,13 @@ const Index = () => {
           }
           
           // Atualiza o nível de risco baseado na magnitude
-          if (updatedSensor.seismic.magnitude > 1.2) {
+          if (updatedSensor.seismic.magnitude >= 4.0) {
             updatedSensor.riskLevel = 'CRITICAL';
             updatedSensor.status = 'ALERT';
-          } else if (updatedSensor.seismic.magnitude > 1.1) {
+          } else if (updatedSensor.seismic.magnitude >= 3.0) {
             updatedSensor.riskLevel = 'HIGH';
             updatedSensor.status = 'ALERT';
-          } else if (updatedSensor.seismic.magnitude > 1.05) {
+          } else if (updatedSensor.seismic.magnitude >= 2.0) {
             updatedSensor.riskLevel = 'MEDIUM';
             updatedSensor.status = 'ALERT';
           } else {
@@ -63,7 +77,7 @@ const Index = () => {
           return updatedSensor;
         })
       );
-    }, 5000); // Atualiza a cada 5 segundos
+    }, 8000); // Atualiza a cada 8 segundos
 
     return () => clearInterval(interval);
   }, []);
@@ -77,7 +91,7 @@ const Index = () => {
       )
     );
     
-    toast.success('Alerta confirmado com sucesso');
+    toast.success('Alerta sísmico confirmado com sucesso');
   };
 
   const unreadAlerts = alerts.filter(alert => !alert.acknowledged).length;

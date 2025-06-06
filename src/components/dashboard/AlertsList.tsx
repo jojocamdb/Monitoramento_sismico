@@ -40,6 +40,16 @@ const AlertsList = ({ alerts, onAcknowledgeAlert }: AlertsListProps) => {
     }
   };
 
+  const getTypeLabel = (type: string) => {
+    switch (type) {
+      case 'EARTHQUAKE': return 'Terremoto';
+      case 'TREMOR': return 'Tremor';
+      case 'AFTERSHOCK': return 'Réplica';
+      case 'SYSTEM_ERROR': return 'Erro Sistema';
+      default: return type;
+    }
+  };
+
   const formatTimeAgo = (timestamp: Date) => {
     const now = new Date();
     const diffMs = now.getTime() - timestamp.getTime();
@@ -59,7 +69,7 @@ const AlertsList = ({ alerts, onAcknowledgeAlert }: AlertsListProps) => {
         <CardTitle className="text-slate-50 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <AlertTriangle className="w-5 h-5 text-volcanic-500" />
-            <span>Alertas Recentes</span>
+            <span>Alertas Sísmicos</span>
           </div>
           <Badge variant="outline" className="text-slate-300">
             {alerts.filter(a => !a.acknowledged).length} pendentes
@@ -88,17 +98,27 @@ const AlertsList = ({ alerts, onAcknowledgeAlert }: AlertsListProps) => {
                     <div className="flex items-center space-x-2 mb-2">
                       {getSeverityIcon(alert.severity)}
                       {getSeverityBadge(alert.severity)}
+                      <Badge variant="outline" className="text-xs">
+                        {getTypeLabel(alert.type)}
+                      </Badge>
                       <div className="flex items-center space-x-1 text-slate-400 text-sm">
                         <MapPin className="w-3 h-3" />
-                        <span>{alert.location.latitude.toFixed(3)}, {alert.location.longitude.toFixed(3)}</span>
+                        <span>{alert.location.country}</span>
                       </div>
                     </div>
                     
                     <p className="text-slate-50 mb-2">{alert.message}</p>
                     
+                    <div className="grid grid-cols-2 gap-2 text-sm text-slate-400 mb-2">
+                      <div>Magnitude: <span className="text-slate-50 font-mono">{alert.magnitude}</span></div>
+                      <div>Profundidade: <span className="text-slate-50">{alert.depth}km</span></div>
+                      <div>Região: <span className="text-slate-50">{alert.location.region}</span></div>
+                      <div>Sensor: <span className="text-slate-50">{alert.sensorId}</span></div>
+                    </div>
+                    
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-slate-400">
-                        Sensor: {alert.sensorId} • {formatTimeAgo(alert.timestamp)}
+                        {formatTimeAgo(alert.timestamp)}
                       </span>
                       
                       {!alert.acknowledged && (
